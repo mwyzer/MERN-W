@@ -16,8 +16,10 @@ import {
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import { orange } from "@mui/material/colors";
 import products from "../../data/Products";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,7 +37,9 @@ const Products = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
     const matchesCategory =
       selectedCategory === "" || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -49,6 +53,10 @@ const Products = () => {
   const categories = [...new Set(products.map((product) => product.category))];
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const productDetailPage = (product) => {
+    navigate(`/${product}`);
+  };
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -116,7 +124,15 @@ const Products = () => {
         }}
       >
         {paginatedProducts.map((product, index) => (
-          <Card key={index} sx={{ width: 210, minHeight: 280 }}>
+          <Card
+            key={index}
+            sx={{
+              width: 210,
+              minHeight: 280,
+              "&:hover": { cursor: "pointer" },
+            }}
+            onClick={() => productDetailPage(product.name)}
+          >
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -135,8 +151,7 @@ const Products = () => {
               <Typography
                 sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
               >
-                {product.rating}{" "}
-                <StarRoundedIcon sx={{ color: orange[500] }} />
+                {product.rating} <StarRoundedIcon sx={{ color: orange[500] }} />
               </Typography>
               <Typography sx={{ display: "flex", alignItems: "center" }}>
                 Stock: {product.stock}

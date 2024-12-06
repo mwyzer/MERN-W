@@ -1,4 +1,5 @@
-const products = [{
+const products = [
+  {
     "_id": {
       "$oid": "6566c165801e99be12650c13"
     },
